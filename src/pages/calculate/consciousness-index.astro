@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import ConsciousnessIndexCalculator from '../../components/calculators/ConsciousnessIndexCalculator.astro';
+---
+
+<BaseLayout title="Consciousness Index Calculator" description="Calculate C(S) to measure system awareness">
+  <article class="content">
+    <header>
+      <h1>Consciousness Index Calculator</h1>
+      <p style="font-size: 1.1em; color: var(--league-gray); margin-top: var(--spacing-md);">
+        Measure how efficiently a system allocates friction between humans and machines
+      </p>
+    </header>
+    
+    <ConsciousnessIndexCalculator />
+    
+    <section style="margin-top: var(--spacing-2xl); padding: var(--spacing-lg); background-color: #f9f9f9; border-radius: 5px;">
+      <h2>Understanding the Consciousness Index</h2>
+      <p>
+        The <strong>Consciousness Index C(S)</strong> tracks directionality — how well a system transfers friction from humans to machines.
+      </p>
+      <p>
+        <strong>C(S) = 1</strong> means perfect alignment: humans experience no unnecessary friction; all residual complexity is computational.
+      </p>
+      <p>
+        <strong>C(S) = 0</strong> means total unconsciousness: humans carry the entire temporal burden.
+      </p>
+      <p>
+        Between those poles lies civilization as we know it — half-awake, half-efficient.
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin: var(--spacing-md) 0;">
+        <thead>
+          <tr style="background-color: var(--league-blue); color: white;">
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Range</th>
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">0.0–0.3</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Unconscious — human time is primary fuel</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">0.3–0.7</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Transitional — mixed human/system friction</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">0.7–1.0</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Conscious — human time protected, friction absorbed</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <a href="/chapters/chapter-02">Read more in Chapter 2 →</a>
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+

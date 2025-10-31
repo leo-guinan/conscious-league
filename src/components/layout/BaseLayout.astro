@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "The Conscious League's Rulebook - A Guide to Awakening" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title} | The Conscious League's Rulebook</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  </head>
+  <body>
+    <nav class="container">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/chapters">Chapters</a></li>
+        <li><a href="/calculate">Calculate</a></li>
+        <li><a href="/explore">Explore</a></li>
+        <li><a href="/measure">Measure</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/resources">Resources</a></li>
+      </ul>
+    </nav>
+    <main class="container">
+      <slot />
+    </main>
+    <footer class="container" style="margin-top: var(--spacing-2xl); padding: var(--spacing-lg) 0; border-top: 1px solid #eee; text-align: center; color: var(--league-gray); font-size: 0.9em;">
+      <p>The Conscious League's Rulebook &copy; {new Date().getFullYear()}</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  @import '../../styles/global.css';
+</style>
+

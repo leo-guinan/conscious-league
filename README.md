@@ -1,43 +1,82 @@
-# Astro Starter Kit: Minimal
+# The Conscious League's Rulebook - Interactive Site
 
-```sh
-npm create astro@latest -- --template minimal
+Interactive web companion to The Conscious League's Rulebook, built with Astro.
+
+## Features
+
+- **Chapters**: All 11 chapters (Preface + 9 chapters + Epilogue) fully converted
+- **Calculators**: 5 interactive formula calculators:
+  - Time Violence Score (TV(S))
+  - Relative Time Severity (TSS)
+  - Consciousness Index (C(S))
+  - Time Justice Triad (J)
+  - Hybrid Time Violence (η^HA)
+- **Dashboard**: Time Justice Triad Dashboard with 3 synchronized panels
+- **Formula Rendering**: KaTeX for beautiful mathematical notation
+
+## Tech Stack
+
+- **Astro**: Content-first static site framework
+- **KaTeX**: LaTeX formula rendering
+- **Chart.js**: For interactive visualizations
+- **Vanilla CSS**: Simple, maintainable styling
+
+## Development
+
+```bash
+# Install dependencies
+cd site
+npm install
+
+# Start dev server (runs on http://localhost:4321)
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Deployment
 
-## 🚀 Project Structure
+This site is configured for GitHub Pages deployment via GitHub Actions.
 
-Inside of your Astro project, you'll see the following folders and files:
+The workflow automatically:
+- Builds the site on push to `main`/`master`
+- Deploys to GitHub Pages
 
-```text
-/
-├── public/
+To enable:
+1. Go to repository Settings → Pages
+2. Source: Deploy from a branch → select `gh-pages` (or configure Actions)
+3. The GitHub Actions workflow will handle deployment automatically
+
+## Project Structure
+
+```
+site/
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── pages/          # Astro pages (file-based routing)
+│   │   ├── chapters/   # Chapter pages
+│   │   └── calculate/  # Calculator pages
+│   ├── components/      # Reusable components
+│   │   ├── layout/      # Base layout, navigation
+│   │   ├── shared/      # Formula, Theorem components
+│   │   ├── calculators/ # Calculator components
+│   │   └── dashboards/  # Dashboard components
+│   ├── scripts/         # Utility JavaScript (formulas, etc.)
+│   └── styles/          # Global CSS
+└── public/              # Static assets
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Status
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+✅ **Complete Features:**
+- All chapters converted and rendered
+- All 5 calculators built and functional
+- Time Justice Triad Dashboard complete
+- KaTeX formula rendering working
+- Full navigation structure
+- Responsive design
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Ready for production deployment!

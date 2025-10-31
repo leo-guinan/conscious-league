@@ -1,0 +1,260 @@
+---
+import Formula from '../shared/Formula.astro';
+---
+
+<div class="calculator-container">
+  <div class="calculator-header">
+    <h2>Time Violence Score Calculator</h2>
+    <p class="calculator-description">
+      Calculate the Time Violence Score for a system:
+      <Formula formula="\text{TV}(S) = \text{Ops}(S) \times \left(1 + \text{Info}(S)\right)" display={true} />
+    </p>
+  </div>
+  
+  <div class="calculator-inputs">
+    <div class="input-group">
+      <label for="ops-input">
+        <strong>Operational Latency (Ops(S))</strong>
+        <span class="input-help">Time lost to procedure, in hours</span>
+      </label>
+      <input type="number" id="ops-input" min="0" step="0.1" value="2" />
+    </div>
+    
+    <div class="input-group">
+      <label for="info-input">
+        <strong>Informational Distortion (Info(S))</strong>
+        <span class="input-help">Uncertainty, confusion, opacity (0-1 scale)</span>
+      </label>
+      <input type="number" id="info-input" min="0" max="1" step="0.01" value="0.3" />
+    </div>
+  </div>
+  
+  <div class="calculator-result">
+    <div class="result-value">
+      <span class="result-label">Time Violence Score:</span>
+      <span class="result-number" id="tv-result">—</span>
+    </div>
+    <div class="result-breakdown" id="breakdown">
+      <p><strong>Breakdown:</strong></p>
+      <ul id="breakdown-list"></ul>
+    </div>
+  </div>
+  
+  <div class="calculator-visualization">
+    <canvas id="tv-chart"></canvas>
+  </div>
+</div>
+
+<script>
+  import { calculateTimeViolence, formatNumber } from '../../scripts/formulas.js';
+  import { Chart, registerables } from 'chart.js';
+  
+  Chart.register(...registerables);
+  
+  const opsInput = document.getElementById('ops-input');
+  const infoInput = document.getElementById('info-input');
+  const resultEl = document.getElementById('tv-result');
+  const breakdownEl = document.getElementById('breakdown-list');
+  const canvas = document.getElementById('tv-chart');
+  
+  let chart = null;
+  
+  function updateCalculator() {
+    const ops = parseFloat(opsInput.value) || 0;
+    const info = parseFloat(infoInput.value) || 0;
+    
+    const tv = calculateTimeViolence(ops, info);
+    resultEl.textContent = formatNumber(tv, 2);
+    
+    // Update breakdown
+    breakdownEl.innerHTML = `
+      <li>Operational Latency: <strong>${formatNumber(ops)} hours</strong></li>
+      <li>Informational Distortion: <strong>${formatNumber(info * 100, 1)}%</strong></li>
+      <li>Multiplier: <strong>${formatNumber(1 + info, 2)}×</strong></li>
+      <li>Total Time Violence: <strong>${formatNumber(tv, 2)} hours</strong></li>
+    `;
+    
+    // Update chart
+    if (chart) {
+      chart.destroy();
+    }
+    
+    chart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: ['Operational', 'Informational', 'Total TV'],
+        datasets: [{
+          label: 'Time Violence (hours)',
+          data: [ops, ops * info, tv],
+          backgroundColor: [
+            'rgba(59, 130, 246, 0.5)',
+            'rgba(147, 51, 234, 0.5)',
+            'rgba(239, 68, 68, 0.7)'
+          ],
+          borderColor: [
+            'rgb(59, 130, 246)',
+            'rgb(147, 51, 234)',
+            'rgb(239, 68, 68)'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Hours'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + formatNumber(context.parsed.y, 2) + ' hours';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  
+  // Initial calculation
+  updateCalculator();
+  
+  // Update on input change
+  opsInput.addEventListener('input', updateCalculator);
+  infoInput.addEventListener('input', updateCalculator);
+</script>
+
+<style>
+  .calculator-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+  }
+  
+  .calculator-header {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .calculator-header h2 {
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .calculator-description {
+    color: var(--league-gray);
+    font-size: 0.95em;
+  }
+  
+  .calculator-inputs {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .input-group label {
+    font-weight: 500;
+    color: var(--league-gray);
+  }
+  
+  .input-help {
+    display: block;
+    font-size: 0.85em;
+    color: #6b7280;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+  
+  .input-group input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.2s;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--league-blue);
+  }
+  
+  .calculator-result {
+    background: #f9fafb;
+    border-left: 4px solid var(--league-blue);
+    border-radius: 5px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .result-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-label {
+    font-weight: 600;
+    color: var(--league-gray);
+  }
+  
+  .result-number {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--league-blue);
+    font-family: var(--font-mono);
+  }
+  
+  .result-breakdown {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .result-breakdown ul {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--spacing-sm) 0 0 0;
+  }
+  
+  .result-breakdown li {
+    padding: var(--spacing-xs) 0;
+    color: var(--league-gray);
+  }
+  
+  .calculator-visualization {
+    margin-top: var(--spacing-lg);
+    height: 300px;
+  }
+  
+  @media (max-width: 768px) {
+    .calculator-inputs {
+      grid-template-columns: 1fr;
+    }
+    
+    .result-value {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-xs);
+    }
+  }
+</style>
+

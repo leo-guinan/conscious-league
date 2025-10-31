@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+---
+
+<BaseLayout title="Calculate" description="Interactive calculators for Time Violence formulas">
+  <div class="content">
+    <h1>Calculators</h1>
+    
+    <p style="margin-bottom: var(--spacing-lg);">
+      Interactive calculators for all formulas from the book. Adjust parameters and see
+      the results in real-time.
+    </p>
+    
+    <section style="margin: var(--spacing-xl) 0;">
+      <h2>Available Calculators</h2>
+      <ul style="list-style: none; margin: var(--spacing-lg) 0;">
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/calculate/time-violence" style="font-size: 1.1em; font-weight: 500;">
+            Time Violence Score (TV(S))
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Calculate Time Violence: TV(S) = Ops(S) × (1 + Info(S))
+          </p>
+        </li>
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/calculate/tss" style="font-size: 1.1em; font-weight: 500;">
+            Relative Time Severity (TSS)
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Calculate TSS = log₁₀(TV(S)/TV*(S))
+          </p>
+        </li>
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/calculate/consciousness-index" style="font-size: 1.1em; font-weight: 500;">
+            Consciousness Index (C(S))
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Calculate C(S) = 1 - TV^H(S)/TV(S)
+          </p>
+        </li>
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/calculate/time-justice-triad" style="font-size: 1.1em; font-weight: 500;">
+            Time Justice Triad (J)
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Calculate J = (SSR × NWI) / TVS
+          </p>
+        </li>
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/calculate/hybrid-time-violence" style="font-size: 1.1em; font-weight: 500;">
+            Hybrid Time Violence (η^HA)
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Calculate transfer efficiency: η^HA = ΔTV^H(S) / ΔTV^A(S)
+          </p>
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+

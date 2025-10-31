@@ -1,0 +1,335 @@
+---
+import Formula from '../shared/Formula.astro';
+---
+
+<div class="calculator-container">
+  <div class="calculator-header">
+    <h2>Hybrid Time Violence Calculator</h2>
+    <p class="calculator-description">
+      Calculate transfer efficiency in human–AI systems:
+      <Formula formula="\eta^{HA} = \frac{\Delta\text{TV}^H(S)}{\Delta\text{TV}^A(S)}" display={true} />
+    </p>
+  </div>
+  
+  <div class="calculator-inputs">
+    <div class="input-group">
+      <label for="delta-human-input">
+        <strong>ΔTV^H(S) - Human Time Change</strong>
+        <span class="input-help">Change in human time cost (hours saved = positive)</span>
+      </label>
+      <input type="number" id="delta-human-input" step="0.1" value="-2" />
+    </div>
+    
+    <div class="input-group">
+      <label for="delta-ai-input">
+        <strong>ΔTV^A(S) - Machine Time Change</strong>
+        <span class="input-help">Change in machine time cost (hours absorbed = positive)</span>
+      </label>
+      <input type="number" id="delta-ai-input" min="0" step="0.1" value="1" />
+    </div>
+    
+    <div class="input-group">
+      <label for="current-human-input">
+        <strong>Current Human TV^H(S)</strong>
+        <span class="input-help">Current human time cost, in hours</span>
+      </label>
+      <input type="number" id="current-human-input" min="0" step="0.1" value="5" />
+    </div>
+    
+    <div class="input-group">
+      <label for="current-total-input">
+        <strong>Current Total TV(S)</strong>
+        <span class="input-help">Current total time cost, in hours</span>
+      </label>
+      <input type="number" id="current-total-input" min="0" step="0.1" value="10" />
+    </div>
+  </div>
+  
+  <div class="calculator-result">
+    <div class="result-value">
+      <span class="result-label">Transfer Efficiency η^HA:</span>
+      <span class="result-number" id="eta-result">—</span>
+    </div>
+    <div class="result-direction" id="direction-display"></div>
+    <div class="result-breakdown" id="breakdown"></div>
+  </div>
+  
+  <div class="calculator-visualization">
+    <div class="flow-diagram">
+      <div class="flow-box human-box">
+        <div class="box-label">Human Time</div>
+        <div class="box-value" id="human-before">—</div>
+        <div class="flow-arrow">↓</div>
+        <div class="box-value" id="human-after">—</div>
+      </div>
+      <div class="flow-box machine-box">
+        <div class="box-label">Machine Time</div>
+        <div class="box-value" id="machine-before">—</div>
+        <div class="flow-arrow">↑</div>
+        <div class="box-value" id="machine-after">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { calculateTransferEfficiency, calculateConsciousnessIndex, getConsciousnessLevel, formatNumber } from '../../scripts/formulas.js';
+  
+  const deltaHumanInput = document.getElementById('delta-human-input');
+  const deltaAIInput = document.getElementById('delta-ai-input');
+  const currentHumanInput = document.getElementById('current-human-input');
+  const currentTotalInput = document.getElementById('current-total-input');
+  const resultEl = document.getElementById('eta-result');
+  const directionEl = document.getElementById('direction-display');
+  const breakdownEl = document.getElementById('breakdown');
+  const humanBeforeEl = document.getElementById('human-before');
+  const humanAfterEl = document.getElementById('human-after');
+  const machineBeforeEl = document.getElementById('machine-before');
+  const machineAfterEl = document.getElementById('machine-after');
+  
+  function updateCalculator() {
+    const deltaHuman = parseFloat(deltaHumanInput.value) || 0;
+    const deltaAI = parseFloat(deltaAIInput.value) || 0;
+    const currentHuman = parseFloat(currentHumanInput.value) || 0;
+    const currentTotal = parseFloat(currentTotalInput.value) || 0;
+    
+    const eta = calculateTransferEfficiency(deltaHuman, deltaAI);
+    const newHumanTV = currentHuman + deltaHuman;
+    const newAITV = (currentTotal - currentHuman) + deltaAI;
+    const newTotalTV = newHumanTV + newAITV;
+    
+    const oldC = calculateConsciousnessIndex(currentHuman, currentTotal);
+    const newC = calculateConsciousnessIndex(newHumanTV, newTotalTV);
+    
+    if (eta === null || isNaN(eta)) {
+      resultEl.textContent = '—';
+      directionEl.innerHTML = '';
+      breakdownEl.innerHTML = '';
+      return;
+    }
+    
+    resultEl.textContent = formatNumber(eta, 2);
+    
+    // Determine direction
+    const isGood = eta > 0 && deltaHuman <= 0 && deltaAI >= 0;
+    const direction = isGood ? 'Conscious Flow' : 'Unconscious Flow';
+    const directionColor = isGood ? '#10b981' : '#ef4444';
+    
+    directionEl.innerHTML = `
+      <div class="direction-badge" style="background-color: ${directionColor}20; border-left: 4px solid ${directionColor};">
+        <strong style="color: ${directionColor};">${direction}</strong> — ${isGood ? 'Time flowing human → machine' : 'Time flowing machine → human (unconscious!)'}
+      </div>
+    `;
+    
+    // Update breakdown
+    const oldLevel = getConsciousnessLevel(oldC);
+    const newLevel = getConsciousnessLevel(newC);
+    
+    breakdownEl.innerHTML = `
+      <p><strong>Breakdown:</strong></p>
+      <ul>
+        <li>Human time saved: <strong>${formatNumber(-deltaHuman, 2)} hours</strong></li>
+        <li>Machine time absorbed: <strong>${formatNumber(deltaAI, 2)} hours</strong></li>
+        <li>Transfer efficiency: <strong>${formatNumber(eta, 2)}</strong></li>
+        <li>Old Consciousness Index: <strong>${formatNumber(oldC || 0, 3)}</strong> (${oldLevel.level})</li>
+        <li>New Consciousness Index: <strong>${formatNumber(newC || 0, 3)}</strong> (${newLevel.level})</li>
+      </ul>
+    `;
+    
+    // Update flow diagram
+    const currentAITV = currentTotal - currentHuman;
+    humanBeforeEl.textContent = formatNumber(currentHuman, 1);
+    humanAfterEl.textContent = formatNumber(newHumanTV, 1);
+    machineBeforeEl.textContent = formatNumber(currentAITV, 1);
+    machineAfterEl.textContent = formatNumber(newAITV, 1);
+    
+    // Color coding
+    if (deltaHuman < 0) {
+      humanBeforeEl.parentElement.style.color = '#10b981';
+    } else {
+      humanBeforeEl.parentElement.style.color = '#ef4444';
+    }
+    
+    if (deltaAI > 0) {
+      machineBeforeEl.parentElement.style.color = '#10b981';
+    } else {
+      machineBeforeEl.parentElement.style.color = '#ef4444';
+    }
+  }
+  
+  // Initial calculation
+  updateCalculator();
+  
+  // Update on input change
+  deltaHumanInput.addEventListener('input', updateCalculator);
+  deltaAIInput.addEventListener('input', updateCalculator);
+  currentHumanInput.addEventListener('input', updateCalculator);
+  currentTotalInput.addEventListener('input', updateCalculator);
+</script>
+
+<style>
+  .calculator-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+  }
+  
+  .calculator-header {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .calculator-header h2 {
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .calculator-description {
+    color: var(--league-gray);
+    font-size: 0.95em;
+  }
+  
+  .calculator-inputs {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .input-group label {
+    font-weight: 500;
+    color: var(--league-gray);
+  }
+  
+  .input-help {
+    display: block;
+    font-size: 0.85em;
+    color: #6b7280;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+  
+  .input-group input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.2s;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--league-blue);
+  }
+  
+  .calculator-result {
+    background: #f9fafb;
+    border-left: 4px solid var(--league-blue);
+    border-radius: 5px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .result-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-label {
+    font-weight: 600;
+    color: var(--league-gray);
+  }
+  
+  .result-number {
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  
+  .direction-badge {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 5px;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-breakdown {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .result-breakdown ul {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--spacing-sm) 0 0 0;
+  }
+  
+  .result-breakdown li {
+    padding: var(--spacing-xs) 0;
+    color: var(--league-gray);
+  }
+  
+  .flow-diagram {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: #f9fafb;
+    border-radius: 8px;
+  }
+  
+  .flow-box {
+    text-align: center;
+    flex: 1;
+  }
+  
+  .box-label {
+    font-weight: 700;
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .box-value {
+    font-size: 1.2em;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    padding: var(--spacing-sm);
+    background: white;
+    border-radius: 5px;
+    margin: var(--spacing-xs) 0;
+  }
+  
+  .flow-arrow {
+    font-size: 1.5em;
+    color: var(--league-blue);
+    margin: var(--spacing-xs) 0;
+  }
+  
+  @media (max-width: 768px) {
+    .calculator-inputs {
+      grid-template-columns: 1fr;
+    }
+    
+    .flow-diagram {
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+    
+    .result-value {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-xs);
+    }
+  }
+</style>
+

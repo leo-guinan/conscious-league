@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.15.3"
+    "astro": "^5.15.3",
+    "chart.js": "^4.5.1",
+    "katex": "^0.16.25"
   }
 }

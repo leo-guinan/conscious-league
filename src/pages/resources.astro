@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+---
+
+<BaseLayout title="Resources" description="Glossary, appendix, and additional resources">
+  <div class="content">
+    <h1>Resources</h1>
+    
+    <section style="margin: var(--spacing-xl) 0;">
+      <h2>Available Resources</h2>
+      <ul style="list-style: none; margin: var(--spacing-lg) 0;">
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/resources/glossary" style="font-size: 1.1em; font-weight: 500;">
+            Glossary
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Glossary of Conscious League terms
+          </p>
+        </li>
+        <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
+          <a href="/resources/appendix" style="font-size: 1.1em; font-weight: 500;">
+            Appendix
+          </a>
+          <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
+            Mathematical appendix and additional resources
+          </p>
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+

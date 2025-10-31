@@ -1,16 +1,49 @@
 ---
-
+import BaseLayout from '../components/layout/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Home" description="The Conscious League's Rulebook - A Guide to Awakening in the Age of Conscious Systems">
+  <div class="content">
+    <header style="text-align: center; margin: var(--spacing-2xl) 0;">
+      <h1>The Conscious League's Rulebook</h1>
+      <p style="font-size: 1.2em; color: var(--league-gray); margin-top: var(--spacing-md);">
+        A Guide to Awakening
+      </p>
+    </header>
+    
+    <section style="margin: var(--spacing-2xl) 0;">
+      <h2>Welcome</h2>
+      <p>
+        This interactive companion to <em>The Conscious League's Rulebook</em> brings the concepts
+        to life with calculators, dashboards, demos, and tools.
+      </p>
+      <p>
+        Explore the chapters, calculate Time Violence scores, visualize consciousness metrics,
+        and measure real-world systems.
+      </p>
+    </section>
+    
+    <section style="margin: var(--spacing-2xl) 0;">
+      <h2>Quick Links</h2>
+      <ul style="list-style: none; line-height: 2;">
+        <li><a href="/chapters/preface">📖 Start Reading → Preface</a></li>
+        <li><a href="/calculate">🔢 Calculators → Interactive Formulas</a></li>
+        <li><a href="/dashboard">📊 Dashboard → Time Justice Triad</a></li>
+        <li><a href="/explore">🎯 Explore → Concept Demos</a></li>
+        <li><a href="/measure">📏 Measure → Analysis Tools</a></li>
+      </ul>
+    </section>
+    
+    <section style="margin: var(--spacing-2xl) 0; padding: var(--spacing-lg); background-color: #f5f5f5; border-radius: 5px;">
+      <h2>About the Book</h2>
+      <p>
+        <em>The Conscious League's Rulebook</em> describes what happens when intelligence stops
+        chasing productivity and starts compounding awareness.
+      </p>
+      <p>
+        We call this new domain the <strong>Conscious League</strong> — a civilization-wide sport
+        where the goal is not domination but integration, not victory but visibility.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

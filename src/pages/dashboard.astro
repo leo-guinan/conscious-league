@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import TimeJusticeTriad from '../components/dashboards/TimeJusticeTriad.astro';
+import Formula from '../components/shared/Formula.astro';
+---
+
+<BaseLayout title="Dashboard" description="Time Justice Triad Dashboard">
+  <article class="content">
+    <header>
+      <h1>Time Justice Triad Dashboard</h1>
+      <p style="font-size: 1.1em; color: var(--league-gray); margin-top: var(--spacing-md);">
+        Measuring liberation at the speed of awareness
+      </p>
+    </header>
+    
+    <TimeJusticeTriad />
+    
+    <section style="margin-top: var(--spacing-2xl); padding: var(--spacing-lg); background-color: #f9f9f9; border-radius: 5px;">
+      <h2>Understanding the Time Justice Triad</h2>
+      
+      <p>
+        The <strong>Time Justice Triad</strong> converts the abstract principles of the Conscious League into a working analytics layer.
+        It lets any organization quantify whether its activity is returning or consuming human time.
+      </p>
+      
+      <h3>The Three Metrics</h3>
+      
+      <div style="display: grid; gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
+        <div style="padding: var(--spacing-md); background: white; border-left: 3px solid var(--league-blue); border-radius: 3px;">
+          <h4 style="margin-top: 0; color: var(--league-blue);">TVS — Time Violence Score</h4>
+          <p>Aggregate friction per participant (hours lost to redundancy, confusion, delay). Target: ↓ toward 0</p>
+          <p><em>Color code:</em> Green (&lt;0.2), Yellow (0.2–0.6), Red (&gt;0.6)</p>
+        </div>
+        
+        <div style="padding: var(--spacing-md); background: white; border-left: 3px solid var(--emerald); border-radius: 3px;">
+          <h4 style="margin-top: 0; color: var(--emerald);">NWI — Navigator Wellbeing Index</h4>
+          <p>Average emotional and cognitive load of humans in the system. Target: ↑</p>
+          <p><em>Measures:</em> Emotional capacity, cognitive load, creative capacity, collaborative health, autonomy</p>
+        </div>
+        
+        <div style="padding: var(--spacing-md); background: white; border-left: 3px solid var(--amber); border-radius: 3px;">
+          <h4 style="margin-top: 0; color: var(--amber);">SSR — Systemic Simplification Rate</h4>
+          <p>Rate at which procedural steps or decisions decrease without loss of accuracy. Target: ↑↑</p>
+          <p><em>Tracks:</em> Complexity over time → "steps per task" reduction</p>
+        </div>
+      </div>
+      
+      <h3>Composite Justice Index</h3>
+      <p>
+        The composite index <Formula formula="J = \frac{\text{SSR} \times \text{NWI}}{\text{TVS}}" /> measures the ratio of collective flourishing to friction.
+      </p>
+      <ul>
+        <li><strong>J &gt; 1:</strong> Time is compounding; system liberating awareness</li>
+        <li><strong>J ≈ 1:</strong> Steady state; neutral system</li>
+        <li><strong>J &lt; 1:</strong> Regression; system consuming more time than it returns</li>
+      </ul>
+      
+      <h3>Example Scenarios</h3>
+      <p>Try the different scenarios in the dropdown to see how different systems measure on the Triad:</p>
+      <ul>
+        <li><strong>Startup in Flow State:</strong> Low TVS, high NWI, improving SSR</li>
+        <li><strong>Corporate Overload:</strong> High TVS, low NWI, declining SSR</li>
+        <li><strong>University Pilot Bottega:</strong> Moderate TVS, good NWI, steady SSR improvement</li>
+        <li><strong>AI Platform with Dark Patterns:</strong> Very high TVS, very low NWI, declining SSR</li>
+      </ul>
+      
+      <p>
+        <a href="/chapters/appendix_b">Read more in Appendix B →</a>
+      </p>
+    </section>
+  </article>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+interface Props {
+  title?: string;
+  type?: 'theorem' | 'definition' | 'rule';
+}
+
+const { title, type = 'theorem' } = Astro.props;
+---
+
+<div class={`theorem-box theorem-${type}`}>
+  <div class="theorem-label">{type === 'theorem' ? 'Theorem' : type === 'definition' ? 'Definition' : 'League Rule'}{title ? ` (${title})` : ''}</div>
+  <div class="theorem-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .theorem-box {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md);
+    background-color: #f9f9f9;
+    border-left: 4px solid var(--league-blue);
+    border-radius: 3px;
+  }
+  
+  .theorem-label {
+    font-weight: 700;
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-sans);
+  }
+  
+  .theorem-content {
+    font-style: italic;
+  }
+  
+  .theorem-definition {
+    border-left-color: var(--emerald);
+  }
+  
+  .theorem-rule {
+    border-left-color: var(--crimson);
+  }
+</style>
+

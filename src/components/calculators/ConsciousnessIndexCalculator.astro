@@ -1,0 +1,324 @@
+---
+import Formula from '../shared/Formula.astro';
+---
+
+<div class="calculator-container">
+  <div class="calculator-header">
+    <h2>Consciousness Index Calculator</h2>
+    <p class="calculator-description">
+      Calculate how efficiently a system allocates friction:
+      <Formula formula="C(S) = 1 - \frac{\text{TV}^H(S)}{\text{TV}(S)}" display={true} />
+    </p>
+  </div>
+  
+  <div class="calculator-inputs">
+    <div class="input-group">
+      <label for="human-tv-input">
+        <strong>Human Time Cost TV^H(S)</strong>
+        <span class="input-help">Time consumed by humans, in hours</span>
+      </label>
+      <input type="number" id="human-tv-input" min="0" step="0.1" value="5" />
+    </div>
+    
+    <div class="input-group">
+      <label for="total-tv-input">
+        <strong>Total Time Cost TV(S)</strong>
+        <span class="input-help">Total time consumed (human + machine), in hours</span>
+      </label>
+      <input type="number" id="total-tv-input" min="0" step="0.1" value="10" />
+    </div>
+  </div>
+  
+  <div class="calculator-result">
+    <div class="result-value">
+      <span class="result-label">Consciousness Index:</span>
+      <span class="result-number" id="c-result">—</span>
+    </div>
+    <div class="result-tier" id="level-display"></div>
+    <div class="result-breakdown" id="breakdown"></div>
+  </div>
+  
+  <div class="calculator-visualization">
+    <div class="gauge-container">
+      <div class="gauge" id="gauge">
+        <div class="gauge-fill" id="gauge-fill"></div>
+        <div class="gauge-center">
+          <span id="gauge-value">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { calculateConsciousnessIndex, getConsciousnessLevel, formatNumber } from '../../scripts/formulas.js';
+  
+  const humanInput = document.getElementById('human-tv-input');
+  const totalInput = document.getElementById('total-tv-input');
+  const resultEl = document.getElementById('c-result');
+  const levelEl = document.getElementById('level-display');
+  const breakdownEl = document.getElementById('breakdown');
+  const gaugeFill = document.getElementById('gauge-fill');
+  const gaugeValue = document.getElementById('gauge-value');
+  
+  function updateCalculator() {
+    const humanTV = parseFloat(humanInput.value) || 0;
+    const totalTV = parseFloat(totalInput.value) || 0;
+    
+    const c = calculateConsciousnessIndex(humanTV, totalTV);
+    const level = getConsciousnessLevel(c);
+    
+    if (c === null || isNaN(c)) {
+      resultEl.textContent = '—';
+      levelEl.innerHTML = '';
+      breakdownEl.innerHTML = '';
+      gaugeFill.style.transform = 'rotate(0deg)';
+      gaugeValue.textContent = '—';
+      return;
+    }
+    
+    resultEl.textContent = formatNumber(c, 3);
+    resultEl.style.color = level.color;
+    
+    // Update level display
+    levelEl.innerHTML = `
+      <div class="level-badge" style="background-color: ${level.color}20; border-left: 4px solid ${level.color};">
+        <strong style="color: ${level.color};">${level.level}</strong> — ${level.description}
+      </div>
+    `;
+    
+    // Update breakdown
+    const machineTV = totalTV - humanTV;
+    const humanPercent = (humanTV / totalTV) * 100;
+    const machinePercent = (machineTV / totalTV) * 100;
+    
+    breakdownEl.innerHTML = `
+      <p><strong>Breakdown:</strong></p>
+      <ul>
+        <li>Human Time Cost: <strong>${formatNumber(humanTV)} hours</strong> (${formatNumber(humanPercent, 1)}%)</li>
+        <li>Machine Time Cost: <strong>${formatNumber(machineTV)} hours</strong> (${formatNumber(machinePercent, 1)}%)</li>
+        <li>Total Time Cost: <strong>${formatNumber(totalTV)} hours</strong></li>
+        <li>Consciousness Index: <strong>${formatNumber(c, 3)}</strong> (0 = unconscious, 1 = perfectly conscious)</li>
+      </ul>
+    `;
+    
+    // Update gauge (0-1 maps to 0-180 degrees)
+    const angle = c * 180;
+    gaugeFill.style.transform = `rotate(${angle}deg)`;
+    gaugeFill.style.backgroundColor = level.color;
+    gaugeValue.textContent = formatNumber(c, 3);
+    gaugeValue.style.color = level.color;
+  }
+  
+  // Initial calculation
+  updateCalculator();
+  
+  // Update on input change
+  humanInput.addEventListener('input', updateCalculator);
+  totalInput.addEventListener('input', updateCalculator);
+</script>
+
+<style>
+  .calculator-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+  }
+  
+  .calculator-header {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .calculator-header h2 {
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .calculator-description {
+    color: var(--league-gray);
+    font-size: 0.95em;
+  }
+  
+  .calculator-inputs {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .input-group label {
+    font-weight: 500;
+    color: var(--league-gray);
+  }
+  
+  .input-help {
+    display: block;
+    font-size: 0.85em;
+    color: #6b7280;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+  
+  .input-group input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.2s;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--league-blue);
+  }
+  
+  .calculator-result {
+    background: #f9fafb;
+    border-left: 4px solid var(--league-blue);
+    border-radius: 5px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .result-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-label {
+    font-weight: 600;
+    color: var(--league-gray);
+  }
+  
+  .result-number {
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  
+  .level-badge {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 5px;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-breakdown {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .result-breakdown ul {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--spacing-sm) 0 0 0;
+  }
+  
+  .result-breakdown li {
+    padding: var(--spacing-xs) 0;
+    color: var(--league-gray);
+  }
+  
+  .gauge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+  }
+  
+  .gauge {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      #ef4444 0deg,
+      #f59e0b 60deg,
+      #10b981 120deg,
+      #10b981 180deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .gauge::before {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: white;
+  }
+  
+  .gauge-fill {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      #ef4444 0deg,
+      #f59e0b 60deg,
+      #10b981 120deg,
+      #10b981 180deg
+    );
+    clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 50%);
+    transition: transform 0.3s ease;
+    transform-origin: center;
+  }
+  
+  .gauge-center {
+    position: relative;
+    z-index: 10;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  
+  @media (max-width: 768px) {
+    .calculator-inputs {
+      grid-template-columns: 1fr;
+    }
+    
+    .result-value {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-xs);
+    }
+    
+    .gauge {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .gauge::before,
+    .gauge-fill,
+    .gauge-center {
+      width: 120px;
+      height: 120px;
+    }
+    
+    .gauge-center {
+      font-size: 1.5em;
+    }
+  }
+</style>
+

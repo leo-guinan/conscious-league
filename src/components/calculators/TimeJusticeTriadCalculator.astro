@@ -1,0 +1,331 @@
+---
+import Formula from '../shared/Formula.astro';
+---
+
+<div class="calculator-container">
+  <div class="calculator-header">
+    <h2>Time Justice Triad Calculator</h2>
+    <p class="calculator-description">
+      Calculate the composite Justice Index:
+      <Formula formula="J = \frac{\text{SSR} \times \text{NWI}}{\text{TVS}}" display={true} />
+    </p>
+  </div>
+  
+  <div class="calculator-inputs">
+    <div class="input-group">
+      <label for="tvs-input">
+        <strong>Time Violence Score (TVS)</strong>
+        <span class="input-help">Aggregate friction per participant (0-1 scale)</span>
+      </label>
+      <input type="number" id="tvs-input" min="0" max="10" step="0.01" value="0.5" />
+    </div>
+    
+    <div class="input-group">
+      <label for="nwi-input">
+        <strong>Navigator Wellbeing Index (NWI)</strong>
+        <span class="input-help">Average emotional/cognitive load (0-1 scale)</span>
+      </label>
+      <input type="number" id="nwi-input" min="0" max="1" step="0.01" value="0.7" />
+    </div>
+    
+    <div class="input-group">
+      <label for="ssr-input">
+        <strong>Systemic Simplification Rate (SSR)</strong>
+        <span class="input-help">Rate of friction reduction (0-2+ scale)</span>
+      </label>
+      <input type="number" id="ssr-input" min="0" step="0.01" value="1.0" />
+    </div>
+  </div>
+  
+  <div class="calculator-result">
+    <div class="result-value">
+      <span class="result-label">Justice Index (J):</span>
+      <span class="result-number" id="j-result">—</span>
+    </div>
+    <div class="result-tier" id="interpretation-display"></div>
+    <div class="result-breakdown" id="breakdown"></div>
+  </div>
+  
+  <div class="calculator-visualization">
+    <div class="triad-display">
+      <div class="triad-panel" id="tvs-panel">
+        <div class="panel-header">TVS</div>
+        <div class="panel-value" id="tvs-value">—</div>
+        <div class="panel-bar">
+          <div class="panel-fill" id="tvs-fill"></div>
+        </div>
+      </div>
+      <div class="triad-panel" id="nwi-panel">
+        <div class="panel-header">NWI</div>
+        <div class="panel-value" id="nwi-value">—</div>
+        <div class="panel-bar">
+          <div class="panel-fill" id="nwi-fill"></div>
+        </div>
+      </div>
+      <div class="triad-panel" id="ssr-panel">
+        <div class="panel-header">SSR</div>
+        <div class="panel-value" id="ssr-value">—</div>
+        <div class="panel-bar">
+          <div class="panel-fill" id="ssr-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { calculateTimeJusticeTriad, getJusticeInterpretation, formatNumber } from '../../scripts/formulas.js';
+  
+  const tvsInput = document.getElementById('tvs-input');
+  const nwiInput = document.getElementById('nwi-input');
+  const ssrInput = document.getElementById('ssr-input');
+  const resultEl = document.getElementById('j-result');
+  const interpretationEl = document.getElementById('interpretation-display');
+  const breakdownEl = document.getElementById('breakdown');
+  const tvsValueEl = document.getElementById('tvs-value');
+  const nwiValueEl = document.getElementById('nwi-value');
+  const ssrValueEl = document.getElementById('ssr-value');
+  const tvsFillEl = document.getElementById('tvs-fill');
+  const nwiFillEl = document.getElementById('nwi-fill');
+  const ssrFillEl = document.getElementById('ssr-fill');
+  
+  function updateCalculator() {
+    const tvs = parseFloat(tvsInput.value) || 0;
+    const nwi = parseFloat(nwiInput.value) || 0;
+    const ssr = parseFloat(ssrInput.value) || 0;
+    
+    const j = calculateTimeJusticeTriad(ssr, nwi, tvs);
+    const interpretation = getJusticeInterpretation(j);
+    
+    if (j === null || isNaN(j)) {
+      resultEl.textContent = '—';
+      interpretationEl.innerHTML = '';
+      breakdownEl.innerHTML = '';
+      return;
+    }
+    
+    resultEl.textContent = formatNumber(j, 2);
+    resultEl.style.color = interpretation.color;
+    
+    // Update interpretation display
+    interpretationEl.innerHTML = `
+      <div class="interpretation-badge" style="background-color: ${interpretation.color}20; border-left: 4px solid ${interpretation.color};">
+        <strong style="color: ${interpretation.color};">${interpretation.interpretation}</strong> — ${interpretation.description}
+      </div>
+    `;
+    
+    // Update breakdown
+    breakdownEl.innerHTML = `
+      <p><strong>Breakdown:</strong></p>
+      <ul>
+        <li>TVS (Time Violence Score): <strong>${formatNumber(tvs, 2)}</strong></li>
+        <li>NWI (Navigator Wellbeing Index): <strong>${formatNumber(nwi, 2)}</strong></li>
+        <li>SSR (Systemic Simplification Rate): <strong>${formatNumber(ssr, 2)}</strong></li>
+        <li>Justice Index: <strong>${formatNumber(j, 2)}</strong></li>
+      </ul>
+      <p style="margin-top: var(--spacing-md);"><em>J > 1: Time compounding; J ≈ 1: Steady state; J < 1: Regression</em></p>
+    `;
+    
+    // Update visualization
+    tvsValueEl.textContent = formatNumber(tvs, 2);
+    nwiValueEl.textContent = formatNumber(nwi, 2);
+    ssrValueEl.textContent = formatNumber(ssr, 2);
+    
+    // TVS: lower is better (inverse scale)
+    const tvsPercent = Math.max(0, Math.min(100, (1 - tvs) * 100));
+    tvsFillEl.style.width = `${tvsPercent}%`;
+    tvsFillEl.style.backgroundColor = tvs < 0.5 ? '#10b981' : tvs < 0.8 ? '#f59e0b' : '#ef4444';
+    
+    // NWI: higher is better
+    const nwiPercent = nwi * 100;
+    nwiFillEl.style.width = `${nwiPercent}%`;
+    nwiFillEl.style.backgroundColor = nwi > 0.7 ? '#10b981' : nwi > 0.4 ? '#f59e0b' : '#ef4444';
+    
+    // SSR: higher is better (capped at 200% for display)
+    const ssrPercent = Math.min(100, (ssr / 2) * 100);
+    ssrFillEl.style.width = `${ssrPercent}%`;
+    ssrFillEl.style.backgroundColor = ssr > 1.0 ? '#10b981' : ssr > 0.5 ? '#f59e0b' : '#ef4444';
+  }
+  
+  // Initial calculation
+  updateCalculator();
+  
+  // Update on input change
+  tvsInput.addEventListener('input', updateCalculator);
+  nwiInput.addEventListener('input', updateCalculator);
+  ssrInput.addEventListener('input', updateCalculator);
+</script>
+
+<style>
+  .calculator-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+  }
+  
+  .calculator-header {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .calculator-header h2 {
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .calculator-description {
+    color: var(--league-gray);
+    font-size: 0.95em;
+  }
+  
+  .calculator-inputs {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  
+  .input-group label {
+    font-weight: 500;
+    color: var(--league-gray);
+  }
+  
+  .input-help {
+    display: block;
+    font-size: 0.85em;
+    color: #6b7280;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+  
+  .input-group input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.2s;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--league-blue);
+  }
+  
+  .calculator-result {
+    background: #f9fafb;
+    border-left: 4px solid var(--league-blue);
+    border-radius: 5px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .result-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-label {
+    font-weight: 600;
+    color: var(--league-gray);
+  }
+  
+  .result-number {
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  
+  .interpretation-badge {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 5px;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .result-breakdown {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .result-breakdown ul {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--spacing-sm) 0 0 0;
+  }
+  
+  .result-breakdown li {
+    padding: var(--spacing-xs) 0;
+    color: var(--league-gray);
+  }
+  
+  .triad-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+  }
+  
+  .triad-panel {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-md);
+    text-align: center;
+  }
+  
+  .panel-header {
+    font-weight: 700;
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.1em;
+  }
+  
+  .panel-value {
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--league-gray);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .panel-bar {
+    width: 100%;
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: var(--spacing-sm);
+  }
+  
+  .panel-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .calculator-inputs {
+      grid-template-columns: 1fr;
+    }
+    
+    .triad-display {
+      grid-template-columns: 1fr;
+    }
+    
+    .result-value {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-xs);
+    }
+  }
+</style>
+

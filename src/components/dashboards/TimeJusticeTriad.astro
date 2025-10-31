@@ -1,0 +1,697 @@
+---
+import Formula from '../shared/Formula.astro';
+---
+
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>Time Justice Triad Dashboard</h2>
+    <p class="dashboard-description">
+      Measuring liberation at the speed of awareness
+    </p>
+    <p class="dashboard-quote">
+      <em>"If you can't see your time, someone else is spending it."</em>
+    </p>
+  </div>
+  
+  <div class="dashboard-controls">
+    <div class="control-group">
+      <label for="scenario-select">Scenario:</label>
+      <select id="scenario-select">
+        <option value="startup">Startup in Flow State</option>
+        <option value="corporate">Corporate Overload</option>
+        <option value="university">University Pilot Bottega</option>
+        <option value="platform">AI Platform with Dark Patterns</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <button id="reset-btn" class="btn-secondary">Reset</button>
+    <button id="export-btn" class="btn-primary">Export Data</button>
+  </div>
+  
+  <div class="triad-panels">
+    <!-- Friction Panel (TVS) -->
+    <div class="panel friction-panel">
+      <div class="panel-header">
+        <h3>Friction Panel (TVS)</h3>
+        <div class="panel-value" id="tvs-value">—</div>
+      </div>
+      <div class="panel-description">
+        Time Violence Score — Aggregate friction per participant
+      </div>
+      <div class="panel-visualization">
+        <canvas id="tvs-heatmap"></canvas>
+      </div>
+      <div class="panel-bottlenecks" id="bottlenecks-list"></div>
+    </div>
+    
+    <!-- Flourishing Panel (NWI) -->
+    <div class="panel flourishing-panel">
+      <div class="panel-header">
+        <h3>Flourishing Panel (NWI)</h3>
+        <div class="panel-value" id="nwi-value">—</div>
+      </div>
+      <div class="panel-description">
+        Navigator Wellbeing Index — Emotional, cognitive, and creative capacity
+      </div>
+      <div class="panel-visualization">
+        <canvas id="nwi-radar"></canvas>
+      </div>
+      <div class="panel-metrics" id="nwi-metrics"></div>
+    </div>
+    
+    <!-- Flow Panel (SSR) -->
+    <div class="panel flow-panel">
+      <div class="panel-header">
+        <h3>Flow Panel (SSR)</h3>
+        <div class="panel-value" id="ssr-value">—</div>
+      </div>
+      <div class="panel-description">
+        Systemic Simplification Rate — Complexity reduction over time
+      </div>
+      <div class="panel-visualization">
+        <canvas id="ssr-timeline"></canvas>
+      </div>
+      <div class="panel-stats" id="ssr-stats"></div>
+    </div>
+  </div>
+  
+  <div class="composite-index">
+    <div class="index-header">
+      <h3>Composite Justice Index</h3>
+      <Formula formula="J = \frac{\text{SSR} \times \text{NWI}}{\text{TVS}}" display={true} />
+    </div>
+    <div class="index-value" id="justice-index">—</div>
+    <div class="index-interpretation" id="justice-interpretation"></div>
+  </div>
+</div>
+
+<script>
+  import { Chart, registerables } from 'chart.js';
+  import { calculateTimeJusticeTriad, getJusticeInterpretation, formatNumber } from '../../scripts/formulas.js';
+  
+  Chart.register(...registerables);
+  
+  // Pre-configured scenarios
+  const scenarios = {
+    startup: {
+      name: 'Startup in Flow State',
+      tvs: 0.3,
+      nwi: 0.9,
+      ssr: 1.2,
+      bottlenecks: [
+        { name: 'Meetings', tvs: 0.05, color: '#10b981' },
+        { name: 'Documentation', tvs: 0.08, color: '#10b981' },
+        { name: 'Code Review', tvs: 0.07, color: '#f59e0b' },
+        { name: 'Deployment', tvs: 0.1, color: '#10b981' }
+      ],
+      nwiMetrics: {
+        emotional: 0.85,
+        cognitive: 0.90,
+        creative: 0.95,
+        collaborative: 0.88,
+        autonomy: 0.92
+      },
+      ssrHistory: [
+        { week: 0, complexity: 100 },
+        { week: 4, complexity: 85 },
+        { week: 8, complexity: 70 },
+        { week: 12, complexity: 60 },
+        { week: 16, complexity: 55 }
+      ]
+    },
+    corporate: {
+      name: 'Corporate Overload',
+      tvs: 0.8,
+      nwi: 0.4,
+      ssr: 0.3,
+      bottlenecks: [
+        { name: 'Meetings', tvs: 0.25, color: '#ef4444' },
+        { name: 'Emails', tvs: 0.20, color: '#dc2626' },
+        { name: 'Approvals', tvs: 0.15, color: '#dc2626' },
+        { name: 'Reporting', tvs: 0.12, color: '#f59e0b' },
+        { name: 'Process', tvs: 0.08, color: '#f59e0b' }
+      ],
+      nwiMetrics: {
+        emotional: 0.3,
+        cognitive: 0.4,
+        creative: 0.5,
+        collaborative: 0.35,
+        autonomy: 0.4
+      },
+      ssrHistory: [
+        { week: 0, complexity: 100 },
+        { week: 4, complexity: 105 },
+        { week: 8, complexity: 110 },
+        { week: 12, complexity: 108 },
+        { week: 16, complexity: 107 }
+      ]
+    },
+    university: {
+      name: 'University Pilot Bottega',
+      tvs: 0.5,
+      nwi: 0.8,
+      ssr: 0.9,
+      bottlenecks: [
+        { name: 'Peer Review', tvs: 0.15, color: '#f59e0b' },
+        { name: 'Admin', tvs: 0.12, color: '#f59e0b' },
+        { name: 'Research', tvs: 0.10, color: '#10b981' },
+        { name: 'Teaching', tvs: 0.08, color: '#10b981' },
+        { name: 'Grading', tvs: 0.05, color: '#10b981' }
+      ],
+      nwiMetrics: {
+        emotional: 0.75,
+        cognitive: 0.82,
+        creative: 0.85,
+        collaborative: 0.78,
+        autonomy: 0.80
+      },
+      ssrHistory: [
+        { week: 0, complexity: 100 },
+        { week: 4, complexity: 95 },
+        { week: 8, complexity: 90 },
+        { week: 12, complexity: 88 },
+        { week: 16, complexity: 85 }
+      ]
+    },
+    platform: {
+      name: 'AI Platform with Dark Patterns',
+      tvs: 1.1,
+      nwi: 0.3,
+      ssr: 0.2,
+      bottlenecks: [
+        { name: 'Auth Loops', tvs: 0.30, color: '#991b1b' },
+        { name: 'Notifications', tvs: 0.25, color: '#dc2626' },
+        { name: 'Onboarding', tvs: 0.20, color: '#dc2626' },
+        { name: 'Data Entry', tvs: 0.18, color: '#ef4444' },
+        { name: 'Navigation', tvs: 0.17, color: '#ef4444' }
+      ],
+      nwiMetrics: {
+        emotional: 0.2,
+        cognitive: 0.3,
+        creative: 0.4,
+        collaborative: 0.25,
+        autonomy: 0.3
+      },
+      ssrHistory: [
+        { week: 0, complexity: 100 },
+        { week: 4, complexity: 110 },
+        { week: 8, complexity: 120 },
+        { week: 12, complexity: 125 },
+        { week: 16, complexity: 130 }
+      ]
+    },
+    custom: {
+      name: 'Custom',
+      tvs: 0.5,
+      nwi: 0.7,
+      ssr: 1.0,
+      bottlenecks: [],
+      nwiMetrics: {
+        emotional: 0.7,
+        cognitive: 0.7,
+        creative: 0.7,
+        collaborative: 0.7,
+        autonomy: 0.7
+      },
+      ssrHistory: [
+        { week: 0, complexity: 100 },
+        { week: 4, complexity: 95 },
+        { week: 8, complexity: 90 },
+        { week: 12, complexity: 88 },
+        { week: 16, complexity: 85 }
+      ]
+    }
+  };
+  
+  let currentScenario = 'startup';
+  let tvsChart = null;
+  let nwiChart = null;
+  let ssrChart = null;
+  
+  const scenarioSelect = document.getElementById('scenario-select');
+  const resetBtn = document.getElementById('reset-btn');
+  const exportBtn = document.getElementById('export-btn');
+  
+  function getColorForValue(value, inverse = false) {
+    if (inverse) {
+      // For TVS, lower is better
+      if (value < 0.3) return '#10b981'; // emerald
+      if (value < 0.6) return '#f59e0b'; // amber
+      return '#ef4444'; // crimson
+    } else {
+      // For NWI and SSR, higher is better
+      if (value > 0.7) return '#10b981'; // emerald
+      if (value > 0.4) return '#f59e0b'; // amber
+      return '#ef4444'; // crimson
+    }
+  }
+  
+  function updateDashboard() {
+    const scenario = scenarios[currentScenario];
+    
+    // Update composite index
+    const j = calculateTimeJusticeTriad(scenario.ssr, scenario.nwi, scenario.tvs);
+    const interpretation = getJusticeInterpretation(j);
+    
+    document.getElementById('justice-index').textContent = formatNumber(j, 2);
+    document.getElementById('justice-index').style.color = interpretation.color;
+    document.getElementById('justice-interpretation').innerHTML = `
+      <div style="background-color: ${interpretation.color}20; border-left: 4px solid ${interpretation.color}; padding: var(--spacing-sm) var(--spacing-md); border-radius: 5px;">
+        <strong style="color: ${interpretation.color};">${interpretation.interpretation}</strong> — ${interpretation.description}
+      </div>
+    `;
+    
+    // Update panel values
+    document.getElementById('tvs-value').textContent = formatNumber(scenario.tvs, 2);
+    document.getElementById('tvs-value').style.color = getColorForValue(scenario.tvs, true);
+    
+    document.getElementById('nwi-value').textContent = formatNumber(scenario.nwi, 2);
+    document.getElementById('nwi-value').style.color = getColorForValue(scenario.nwi);
+    
+    document.getElementById('ssr-value').textContent = formatNumber(scenario.ssr, 2);
+    document.getElementById('ssr-value').style.color = getColorForValue(scenario.ssr);
+    
+    // Update TVS heatmap
+    if (tvsChart) tvsChart.destroy();
+    const tvsCanvas = document.getElementById('tvs-heatmap');
+    const tvsCtx = tvsCanvas.getContext('2d');
+    
+    if (scenario.bottlenecks && scenario.bottlenecks.length > 0) {
+      tvsChart = new Chart(tvsCtx, {
+        type: 'bar',
+        data: {
+          labels: scenario.bottlenecks.map(b => b.name),
+          datasets: [{
+            label: 'Time Violence',
+            data: scenario.bottlenecks.map(b => b.tvs),
+            backgroundColor: scenario.bottlenecks.map(b => b.color + '80'),
+            borderColor: scenario.bottlenecks.map(b => b.color),
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 0.5,
+              title: {
+                display: true,
+                text: 'Time Violence Score'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+      
+      // Update bottlenecks list
+      const bottlenecksEl = document.getElementById('bottlenecks-list');
+      bottlenecksEl.innerHTML = '<strong>Bottlenecks:</strong><ul>';
+      scenario.bottlenecks.forEach(b => {
+        bottlenecksEl.innerHTML += `
+          <li style="color: ${b.color};">
+            ${b.name}: <strong>${formatNumber(b.tvs, 2)}</strong>
+          </li>
+        `;
+      });
+      bottlenecksEl.innerHTML += '</ul>';
+    }
+    
+    // Update NWI radar
+    if (nwiChart) nwiChart.destroy();
+    const nwiCanvas = document.getElementById('nwi-radar');
+    const nwiCtx = nwiCanvas.getContext('2d');
+    
+    nwiChart = new Chart(nwiCtx, {
+      type: 'radar',
+      data: {
+        labels: Object.keys(scenario.nwiMetrics).map(k => k.charAt(0).toUpperCase() + k.slice(1)),
+        datasets: [{
+          label: 'Wellbeing',
+          data: Object.values(scenario.nwiMetrics),
+          backgroundColor: 'rgba(16, 185, 129, 0.2)',
+          borderColor: '#10b981',
+          borderWidth: 2,
+          pointBackgroundColor: '#10b981',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: '#10b981'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 1,
+            ticks: {
+              stepSize: 0.2
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+    
+    // Update NWI metrics
+    const nwiMetricsEl = document.getElementById('nwi-metrics');
+    nwiMetricsEl.innerHTML = '<strong>Metrics:</strong><ul>';
+    Object.entries(scenario.nwiMetrics).forEach(([key, value]) => {
+      const color = getColorForValue(value);
+      nwiMetricsEl.innerHTML += `
+        <li>
+          ${key.charAt(0).toUpperCase() + key.slice(1)}: <strong style="color: ${color};">${formatNumber(value, 2)}</strong>
+        </li>
+      `;
+    });
+    nwiMetricsEl.innerHTML += '</ul>';
+    
+    // Update SSR timeline
+    if (ssrChart) ssrChart.destroy();
+    const ssrCanvas = document.getElementById('ssr-timeline');
+    const ssrCtx = ssrCanvas.getContext('2d');
+    
+    const ssrTrend = scenario.ssrHistory.map(h => h.complexity);
+    const ssrColor = ssrTrend[ssrTrend.length - 1] < ssrTrend[0] ? '#10b981' : '#ef4444';
+    
+    ssrChart = new Chart(ssrCtx, {
+      type: 'line',
+      data: {
+        labels: scenario.ssrHistory.map(h => `Week ${h.week}`),
+        datasets: [{
+          label: 'Complexity',
+          data: ssrTrend,
+          borderColor: ssrColor,
+          backgroundColor: ssrColor + '20',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'Complexity Score'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Time'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `Complexity: ${context.parsed.y}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    // Update SSR stats
+    const ssrStatsEl = document.getElementById('ssr-stats');
+    const initialComplexity = ssrTrend[0];
+    const finalComplexity = ssrTrend[ssrTrend.length - 1];
+    const change = finalComplexity - initialComplexity;
+    const percentChange = (change / initialComplexity) * 100;
+    const trend = change < 0 ? 'decreasing' : 'increasing';
+    const trendColor = change < 0 ? '#10b981' : '#ef4444';
+    
+    ssrStatsEl.innerHTML = `
+      <strong>Trend:</strong>
+      <ul>
+        <li>Initial: <strong>${formatNumber(initialComplexity, 0)}</strong></li>
+        <li>Final: <strong>${formatNumber(finalComplexity, 0)}</strong></li>
+        <li>Change: <strong style="color: ${trendColor};">${formatNumber(percentChange, 1)}%</strong> (${trend})</li>
+        <li>SSR: <strong>${formatNumber(scenario.ssr, 2)}</strong></li>
+      </ul>
+    `;
+  }
+  
+  scenarioSelect.addEventListener('change', (e) => {
+    currentScenario = e.target.value;
+    updateDashboard();
+  });
+  
+  resetBtn.addEventListener('click', () => {
+    currentScenario = 'startup';
+    scenarioSelect.value = 'startup';
+    updateDashboard();
+  });
+  
+  exportBtn.addEventListener('click', () => {
+    const scenario = scenarios[currentScenario];
+    const j = calculateTimeJusticeTriad(scenario.ssr, scenario.nwi, scenario.tvs);
+    
+    const data = {
+      scenario: scenario.name,
+      timestamp: new Date().toISOString(),
+      metrics: {
+        TVS: scenario.tvs,
+        NWI: scenario.nwi,
+        SSR: scenario.ssr,
+        J: j
+      },
+      bottlenecks: scenario.bottlenecks,
+      nwiMetrics: scenario.nwiMetrics,
+      ssrHistory: scenario.ssrHistory
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `time-justice-triad-${currentScenario}-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  
+  // Initial load
+  updateDashboard();
+</script>
+
+<style>
+  .dashboard-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+  }
+  
+  .dashboard-header {
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+  }
+  
+  .dashboard-header h2 {
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .dashboard-description {
+    color: var(--league-gray);
+    font-size: 1.1em;
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .dashboard-quote {
+    font-style: italic;
+    color: var(--league-gray);
+    margin-top: var(--spacing-md);
+  }
+  
+  .dashboard-controls {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background: #f9fafb;
+    border-radius: 5px;
+    flex-wrap: wrap;
+  }
+  
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+  
+  .control-group label {
+    font-weight: 500;
+    color: var(--league-gray);
+  }
+  
+  .control-group select {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: 2px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 1em;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .btn-primary {
+    background-color: var(--league-blue);
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: rgb(20, 48, 118);
+  }
+  
+  .btn-secondary {
+    background-color: #e5e7eb;
+    color: var(--league-gray);
+  }
+  
+  .btn-secondary:hover {
+    background-color: #d1d5db;
+  }
+  
+  .triad-panels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .panel {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: var(--spacing-md);
+  }
+  
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .panel-header h3 {
+    color: var(--league-blue);
+    font-size: 1.1em;
+    margin: 0;
+  }
+  
+  .panel-value {
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  
+  .panel-description {
+    font-size: 0.9em;
+    color: var(--league-gray);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .panel-visualization {
+    height: 250px;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .panel-bottlenecks ul,
+  .panel-metrics ul,
+  .panel-stats ul {
+    list-style: none;
+    padding-left: 0;
+    margin: var(--spacing-sm) 0 0 0;
+    font-size: 0.9em;
+  }
+  
+  .panel-bottlenecks li,
+  .panel-metrics li,
+  .panel-stats li {
+    padding: var(--spacing-xs) 0;
+  }
+  
+  .composite-index {
+    background: #f9fafb;
+    border-left: 4px solid var(--league-blue);
+    border-radius: 5px;
+    padding: var(--spacing-lg);
+    text-align: center;
+  }
+  
+  .index-header h3 {
+    color: var(--league-blue);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .index-value {
+    font-size: 3em;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    margin: var(--spacing-md) 0;
+  }
+  
+  .index-interpretation {
+    margin-top: var(--spacing-md);
+  }
+  
+  @media (max-width: 1200px) {
+    .triad-panels {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .control-group {
+      width: 100%;
+    }
+    
+    .control-group select {
+      flex: 1;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+    }
+  }
+</style>
+

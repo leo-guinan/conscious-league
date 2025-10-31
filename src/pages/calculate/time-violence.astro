@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import TimeViolenceCalculator from '../../components/calculators/TimeViolenceCalculator.astro';
+---
+
+<BaseLayout title="Time Violence Score Calculator" description="Calculate Time Violence Score for any system">
+  <article class="content">
+    <header>
+      <h1>Time Violence Score Calculator</h1>
+      <p style="font-size: 1.1em; color: var(--league-gray); margin-top: var(--spacing-md);">
+        Calculate how much time a system consumes beyond necessity
+      </p>
+    </header>
+    
+    <TimeViolenceCalculator />
+    
+    <section style="margin-top: var(--spacing-2xl); padding: var(--spacing-lg); background-color: #f9f9f9; border-radius: 5px;">
+      <h2>Understanding Time Violence</h2>
+      <p>
+        <strong>Time Violence</strong> occurs whenever a process, policy, or interface consumes more human time than is operationally or informationally necessary.
+      </p>
+      <p>
+        The Time Violence Score combines two sources of waste:
+      </p>
+      <ul>
+        <li><strong>Operational Latency</strong>: Time lost to procedure — queues, delays, forms, redundancies</li>
+        <li><strong>Informational Distortion</strong>: Time lost to uncertainty, confusion, or opacity (0-1 scale)</li>
+      </ul>
+      <p>
+        Every hospital queue, bureaucratic delay, or opaque algorithm registers a positive TV(S). When that score exceeds the threshold of necessity, the system becomes predatory.
+      </p>
+      <p>
+        <a href="/chapters/chapter-01">Read more in Chapter 1 →</a>
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+

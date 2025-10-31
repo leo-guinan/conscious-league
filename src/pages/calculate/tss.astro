@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import TSSCalculator from '../../components/calculators/TSSCalculator.astro';
+---
+
+<BaseLayout title="Relative Time Severity Calculator" description="Calculate TSS to compare systems">
+  <article class="content">
+    <header>
+      <h1>Relative Time Severity Calculator</h1>
+      <p style="font-size: 1.1em; color: var(--league-gray); margin-top: var(--spacing-md);">
+        Compare actual time to optimal time using logarithmic scale
+      </p>
+    </header>
+    
+    <TSSCalculator />
+    
+    <section style="margin-top: var(--spacing-2xl); padding: var(--spacing-lg); background-color: #f9f9f9; border-radius: 5px;">
+      <h2>Understanding TSS</h2>
+      <p>
+        <strong>Relative Time Severity (TSS)</strong> quantifies waste as an order of magnitude by comparing what is to what should be.
+      </p>
+      <p>
+        Each full point on the log scale represents an order of magnitude in wasted life:
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin: var(--spacing-md) 0;">
+        <thead>
+          <tr style="background-color: var(--league-blue); color: white;">
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Tier</th>
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Approx. Overhead</th>
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Baseline</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">≤ 2×</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Tolerable variance</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Moderate</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">≈ 5×</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Needs redesign</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Major</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">≈ 10×</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Systemic failure begins</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Severe</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">≈ 25×</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Chronic exploitation</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Crisis</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">≥ 100×</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Mass Time Violence</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <a href="/chapters/chapter-02">Read more in Chapter 2 →</a>
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+

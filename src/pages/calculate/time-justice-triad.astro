@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import TimeJusticeTriadCalculator from '../../components/calculators/TimeJusticeTriadCalculator.astro';
+---
+
+<BaseLayout title="Time Justice Triad Calculator" description="Calculate the composite Justice Index">
+  <article class="content">
+    <header>
+      <h1>Time Justice Triad Calculator</h1>
+      <p style="font-size: 1.1em; color: var(--league-gray); margin-top: var(--spacing-md);">
+        Calculate the composite Justice Index from the Time Justice Triad metrics
+      </p>
+    </header>
+    
+    <TimeJusticeTriadCalculator />
+    
+    <section style="margin-top: var(--spacing-2xl); padding: var(--spacing-lg); background-color: #f9f9f9; border-radius: 5px;">
+      <h2>Understanding the Time Justice Triad</h2>
+      <p>
+        The <strong>Time Justice Triad</strong> converts the abstract principles of the Conscious League into a working analytics layer. Three interdependent metrics form the ethical core:
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin: var(--spacing-md) 0;">
+        <thead>
+          <tr style="background-color: var(--league-blue); color: white;">
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Symbol</th>
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Metric</th>
+            <th style="padding: var(--spacing-sm); border: 1px solid #ddd;">Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">TVS</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Time Violence Score</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">↓ toward 0</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">NWI</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Navigator Wellbeing Index</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">↑</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">SSR</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">Systemic Simplification Rate</td>
+            <td style="padding: var(--spacing-sm); border: 1px solid #ddd;">↑↑</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>Justice Index J > 1:</strong> Time is compounding; system liberating awareness.
+      </p>
+      <p>
+        <strong>Justice Index J ≈ 1:</strong> Steady state; neutral system.
+      </p>
+      <p>
+        <strong>Justice Index J < 1:</strong> Regression; system consuming more time than it returns.
+      </p>
+      <p>
+        <a href="/chapters/appendix_b">Read more in Appendix B →</a>
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+

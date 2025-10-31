@@ -1,0 +1,77 @@
+---
+import katex from 'katex';
+import 'katex/dist/katex.css';
+
+interface Props {
+  formula: string;
+  display?: boolean;
+}
+
+const { formula, display = false } = Astro.props;
+
+// Render formula server-side
+let renderedFormula = '';
+try {
+  renderedFormula = katex.renderToString(formula, {
+    throwOnError: false,
+    displayMode: display,
+  });
+} catch (e) {
+  console.error('KaTeX rendering error:', e);
+  renderedFormula = formula; // Fallback to plain text
+}
+---
+
+<div class="formula-container">
+  <Fragment set:html={renderedFormula} />
+</div>
+
+<script>
+  // Client-side fallback if server-side rendering fails
+  import katex from 'katex';
+  
+  function renderFormulas() {
+    const containers = document.querySelectorAll('.formula-container');
+    containers.forEach((container) => {
+      // If container already has KaTeX rendered content, skip
+      if (container.querySelector('.katex')) return;
+      
+      // Try to get formula from data attribute if present
+      const formulaText = container.getAttribute('data-formula');
+      if (formulaText) {
+        try {
+          const html = katex.renderToString(formulaText, {
+            throwOnError: false,
+            displayMode: container.getAttribute('data-display') === 'true',
+          });
+          container.innerHTML = html;
+        } catch (e) {
+          console.error('KaTeX client-side rendering error:', e);
+        }
+      }
+    });
+  }
+  
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', renderFormulas);
+    } else {
+      setTimeout(renderFormulas, 0);
+    }
+  }
+</script>
+
+<style>
+  .formula-container {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-sm);
+    background-color: #f9f9f9;
+    border-left: 3px solid var(--league-blue);
+    border-radius: 3px;
+    text-align: center;
+  }
+  
+  .formula-placeholder {
+    color: var(--league-gray);
+  }
+</style>
