@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
 
 permissions:
@@ -32,17 +31,17 @@ jobs:
         uses: actions/cache@v4
         id: cache
         with:
-          path: site/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('site/package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       
       - name: Install dependencies
-        working-directory: site
+        working-directory: .
         run: npm ci
       
       - name: Build
-        working-directory: site
+        working-directory: .
         run: npm run build
       
       - name: Setup Pages
@@ -51,7 +50,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site/dist
+          path: ./dist
 
   deploy:
     environment:
