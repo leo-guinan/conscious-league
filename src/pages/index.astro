@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../components/layout/BaseLayout.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Home" description="The Conscious League's Rulebook - A Guide to Awakening in the Age of Conscious Systems">
@@ -26,11 +28,11 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
     <section style="margin: var(--spacing-2xl) 0;">
       <h2>Quick Links</h2>
       <ul style="list-style: none; line-height: 2;">
-        <li><a href="/chapters/preface">📖 Start Reading → Preface</a></li>
-        <li><a href="/calculate">🔢 Calculators → Interactive Formulas</a></li>
-        <li><a href="/dashboard">📊 Dashboard → Time Justice Triad</a></li>
-        <li><a href="/explore">🎯 Explore → Concept Demos</a></li>
-        <li><a href="/measure">📏 Measure → Analysis Tools</a></li>
+        <li><a href={`${baseUrl}chapters/preface`}>📖 Start Reading → Preface</a></li>
+        <li><a href={`${baseUrl}calculate`}>🔢 Calculators → Interactive Formulas</a></li>
+        <li><a href={`${baseUrl}dashboard`}>📊 Dashboard → Time Justice Triad</a></li>
+        <li><a href={`${baseUrl}explore`}>🎯 Explore → Concept Demos</a></li>
+        <li><a href={`${baseUrl}measure`}>📏 Measure → Analysis Tools</a></li>
       </ul>
     </section>
     

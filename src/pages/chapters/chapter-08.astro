@@ -1,7 +1,10 @@
 ---
+
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import Formula from '../../components/shared/Formula.astro';
 import Theorem from '../../components/shared/Theorem.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Chapter 8: The League Model — Conscious Systems in Practice" description="Chapter 8 of The Conscious League's Rulebook">
@@ -235,8 +238,8 @@ import Theorem from '../../components/shared/Theorem.astro';
     
     <nav class="chapter-nav" style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-lg); border-top: 1px solid #eee;">
       <div style="display: flex; justify-content: space-between;">
-        <a href="/chapters/chapter-07">← Chapter 7</a>
-        <a href="/chapters/chapter-09">Chapter 9 →</a>
+        <a href={`${baseUrl}chapters/chapter-07`}>← Chapter 7</a>
+        <a href={`${baseUrl}chapters/chapter-09`}>Chapter 9 →</a>
       </div>
     </nav>
   </article>

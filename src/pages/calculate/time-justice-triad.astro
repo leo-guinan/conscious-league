@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import TimeJusticeTriadCalculator from '../../components/calculators/TimeJusticeTriadCalculator.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Time Justice Triad Calculator" description="Calculate the composite Justice Index">
@@ -55,7 +57,7 @@ import TimeJusticeTriadCalculator from '../../components/calculators/TimeJustice
         <strong>Justice Index J < 1:</strong> Regression; system consuming more time than it returns.
       </p>
       <p>
-        <a href="/chapters/appendix_b">Read more in Appendix B →</a>
+        <a href={`${baseUrl}chapters/appendix_b`}>Read more in Appendix B →</a>
       </p>
     </section>
   </article>

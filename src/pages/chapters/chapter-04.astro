@@ -1,8 +1,11 @@
 ---
+
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import Formula from '../../components/shared/Formula.astro';
 import Theorem from '../../components/shared/Theorem.astro';
+const baseUrl = import.meta.env.BASE_URL;
 ---
+const baseUrl = import.meta.env.BASE_URL;
 
 <BaseLayout title="Chapter 4: The Death of Academic Competition" description="Chapter 4 of The Conscious League's Rulebook">
   <article class="content">
@@ -175,8 +178,8 @@ import Theorem from '../../components/shared/Theorem.astro';
     
     <nav class="chapter-nav" style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-lg); border-top: 1px solid #eee;">
       <div style="display: flex; justify-content: space-between;">
-        <a href="/chapters/chapter-03">← Chapter 3</a>
-        <a href="/chapters/chapter-05">Chapter 5 →</a>
+        <a href={`${baseUrl}chapters/chapter-03`}>← Chapter 3</a>
+        <a href={`${baseUrl}chapters/chapter-05`}>Chapter 5 →</a>
       </div>
     </nav>
   </article>

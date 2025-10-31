@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import TimeViolenceCalculator from '../../components/calculators/TimeViolenceCalculator.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Time Violence Score Calculator" description="Calculate Time Violence Score for any system">
@@ -30,7 +32,7 @@ import TimeViolenceCalculator from '../../components/calculators/TimeViolenceCal
         Every hospital queue, bureaucratic delay, or opaque algorithm registers a positive TV(S). When that score exceeds the threshold of necessity, the system becomes predatory.
       </p>
       <p>
-        <a href="/chapters/chapter-01">Read more in Chapter 1 →</a>
+        <a href={`${baseUrl}chapters/chapter-01`}>Read more in Chapter 1 →</a>
       </p>
     </section>
   </article>

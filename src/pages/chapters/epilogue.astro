@@ -1,8 +1,11 @@
 ---
+
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import Formula from '../../components/shared/Formula.astro';
 import Theorem from '../../components/shared/Theorem.astro';
+const baseUrl = import.meta.env.BASE_URL;
 ---
+const baseUrl = import.meta.env.BASE_URL;
 
 <BaseLayout title="Epilogue — The Game of Staying Awake" description="Epilogue of The Conscious League's Rulebook">
   <article class="content">
@@ -130,8 +133,8 @@ import Theorem from '../../components/shared/Theorem.astro';
     
     <nav class="chapter-nav" style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-lg); border-top: 1px solid #eee;">
       <div style="display: flex; justify-content: space-between;">
-        <a href="/chapters/chapter-09">← Chapter 9</a>
-        <a href="/">Home →</a>
+        <a href={`${baseUrl}chapters/chapter-09`}>← Chapter 9</a>
+        <a href={baseUrl}>Home →</a>
       </div>
     </nav>
   </article>

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../components/layout/BaseLayout.astro';
 
+const baseUrl = import.meta.env.BASE_URL;
+
 const chapters = [
   { slug: 'preface', title: 'Preface — The Awakening Player', completed: true },
   { slug: 'chapter-01', title: 'Chapter 1: The Age of Unconscious Systems', completed: true },
@@ -23,7 +25,7 @@ const chapters = [
     <ul style="list-style: none; margin: var(--spacing-lg) 0;">
       {chapters.map((chapter) => (
         <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue); border-radius: 3px;">
-          <a href={`/chapters/${chapter.slug}`} style="font-size: 1.1em; font-weight: 500;">
+          <a href={`${baseUrl}chapters/${chapter.slug}`} style="font-size: 1.1em; font-weight: 500;">
             {chapter.title}
           </a>
         </li>

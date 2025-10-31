@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../components/layout/BaseLayout.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Calculate" description="Interactive calculators for Time Violence formulas">
@@ -15,7 +17,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
       <h2>Available Calculators</h2>
       <ul style="list-style: none; margin: var(--spacing-lg) 0;">
         <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
-          <a href="/calculate/time-violence" style="font-size: 1.1em; font-weight: 500;">
+          <a href={`${baseUrl}calculate/time-violence`} style="font-size: 1.1em; font-weight: 500;">
             Time Violence Score (TV(S))
           </a>
           <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
@@ -23,7 +25,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
           </p>
         </li>
         <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
-          <a href="/calculate/tss" style="font-size: 1.1em; font-weight: 500;">
+          <a href={`${baseUrl}calculate/tss`} style="font-size: 1.1em; font-weight: 500;">
             Relative Time Severity (TSS)
           </a>
           <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
@@ -31,7 +33,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
           </p>
         </li>
         <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
-          <a href="/calculate/consciousness-index" style="font-size: 1.1em; font-weight: 500;">
+          <a href={`${baseUrl}calculate/consciousness-index`} style="font-size: 1.1em; font-weight: 500;">
             Consciousness Index (C(S))
           </a>
           <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
@@ -39,7 +41,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
           </p>
         </li>
         <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
-          <a href="/calculate/time-justice-triad" style="font-size: 1.1em; font-weight: 500;">
+          <a href={`${baseUrl}calculate/time-justice-triad`} style="font-size: 1.1em; font-weight: 500;">
             Time Justice Triad (J)
           </a>
           <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">
@@ -47,7 +49,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
           </p>
         </li>
         <li style="margin: var(--spacing-md) 0; padding: var(--spacing-md); background-color: #f9f9f9; border-left: 3px solid var(--league-blue);">
-          <a href="/calculate/hybrid-time-violence" style="font-size: 1.1em; font-weight: 500;">
+          <a href={`${baseUrl}calculate/hybrid-time-violence`} style="font-size: 1.1em; font-weight: 500;">
             Hybrid Time Violence (η^HA)
           </a>
           <p style="margin-top: var(--spacing-sm); color: var(--league-gray); font-size: 0.9em;">

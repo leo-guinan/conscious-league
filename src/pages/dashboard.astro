@@ -2,6 +2,8 @@
 import BaseLayout from '../components/layout/BaseLayout.astro';
 import TimeJusticeTriad from '../components/dashboards/TimeJusticeTriad.astro';
 import Formula from '../components/shared/Formula.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Dashboard" description="Time Justice Triad Dashboard">
@@ -65,7 +67,7 @@ import Formula from '../components/shared/Formula.astro';
       </ul>
       
       <p>
-        <a href="/chapters/appendix_b">Read more in Appendix B →</a>
+        <a href={`${baseUrl}chapters/appendix_b`}>Read more in Appendix B →</a>
       </p>
     </section>
   </article>
