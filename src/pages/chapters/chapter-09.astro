@@ -4,7 +4,7 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
 import Formula from '../../components/shared/Formula.astro';
 import Theorem from '../../components/shared/Theorem.astro';
 
-const baseUrl = import.meta.env.BASE_URL;
+const baseUrl = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseLayout title="Chapter 9: Conscious Civilization" description="Chapter 9 of The Conscious League's Rulebook">

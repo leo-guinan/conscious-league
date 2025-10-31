@@ -3,7 +3,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
 import TimeJusticeTriad from '../components/dashboards/TimeJusticeTriad.astro';
 import Formula from '../components/shared/Formula.astro';
 
-const baseUrl = import.meta.env.BASE_URL;
+const baseUrl = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseLayout title="Dashboard" description="Time Justice Triad Dashboard">
